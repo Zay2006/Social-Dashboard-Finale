@@ -2,8 +2,7 @@
 
 import { useSession } from 'next-auth/react'
 import { redirect } from 'next/navigation'
-import Sidebar from '@/components/Sidebar'
-import Header from '@/components/Header'
+import Navigation from '@/components/Navigation'
 
 export default function DashboardLayout({
   children,
@@ -21,10 +20,10 @@ export default function DashboardLayout({
   }
 
   return (
-    <div className="h-screen flex bg-[#0f1117]">
-      <Sidebar />
-      <div className="flex-1 overflow-x-hidden">
-        <main className="py-6">
+    <div className="flex h-screen overflow-hidden bg-background">
+      <Navigation />
+      <div className="flex-1 pl-64">
+        <main className="h-full p-6 overflow-auto">
           {children}
         </main>
       </div>

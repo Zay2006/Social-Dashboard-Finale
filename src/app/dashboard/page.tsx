@@ -5,7 +5,7 @@ import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement
 import { FiTwitter, FiInstagram, FiYoutube } from 'react-icons/fi';
 import { FaLinkedin, FaTiktok, FaPinterest } from 'react-icons/fa';
 import type { IconType } from 'react-icons';
-import DashboardLayout from '@/components/layout/DashboardLayout';
+
 import Link from 'next/link';
 
 ChartJS.register(
@@ -104,186 +104,185 @@ export default function DashboardPage() {
     }
   ];
   return (
-    <DashboardLayout>
-      <div className="flex flex-col items-center w-full min-h-screen bg-[#0f1117] p-6">
-        <div className="w-full max-w-7xl">
-          <div className="text-center mb-8">
-            <p className="text-sm text-gray-400">
-              Monitor your social media performance across all platforms
-            </p>
-          </div>
+    <div className="h-full">
+      <div className="mb-4">
+        <p className="text-sm text-muted-foreground text-center">
+          Monitor your social media performance across all platforms
+        </p>
+      </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
-            {stats.map((stat) => (
-              <Link
-                key={stat.platform}
-                href={stat.href}
-                className="block transition-transform hover:scale-105"
-              >
-                <div className="p-6 rounded-lg bg-[#1a1d27] border border-gray-800/50 hover:bg-gray-800/50 transition-colors flex flex-col items-center space-y-2">
-                  <stat.icon
-                    className="h-8 w-8 mb-2"
-                    style={{ color: stat.color }}
-                  />
-                  <dt className="text-sm font-medium text-gray-400 truncate mb-1">
-                    {stat.platform}
-                  </dt>
-                  <dd className="text-xl font-semibold text-white">
-                    {stat.followers.toLocaleString()}
-                  </dd>
-                  <div className="text-sm font-semibold text-green-400">
-                    +{stat.growth}%
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full">
-            <div className="bg-[#1a1d27] shadow rounded-lg p-4 border border-gray-800/50">
-              <h2 className="text-lg font-medium text-white mb-4">Follower Growth</h2>
-              <div className="h-[350px] w-full">
-                <Line
-                  height="100%"
-                  data={{
-                    labels: months,
-                    datasets: stats.map((stat) => ({
-                      label: stat.platform,
-                      data: generateGrowthData(stat.followers, stat.growth),
-                      borderColor: stat.color,
-                      backgroundColor: stat.color,
-                      tension: 0.4,
-                      pointRadius: 4,
-                      pointHoverRadius: 6
-                    }))
-                  }}
-                  options={{
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                      legend: {
-                        position: 'top' as const,
-                        align: 'start' as const,
-                        labels: {
-                          color: '#9CA3AF',
-                          padding: 20,
-                          font: { size: 12 },
-                          boxWidth: 15,
-                          usePointStyle: true
-                        }
-                      }
-                    },
-                    scales: {
-                      y: {
-                        beginAtZero: true,
-                        grid: {
-                          color: 'rgba(75, 85, 99, 0.15)',
-                          display: true
-                        },
-                        border: {
-                          display: false
-                        },
-                        ticks: {
-                          color: '#9CA3AF',
-                          callback: (value: string | number) => {
-                            if (typeof value === 'number') {
-                              return Intl.NumberFormat('en-US', {
-                                notation: 'compact',
-                                maximumFractionDigits: 1
-                              }).format(value);
-                            }
-                            return value;
-                          }
-                        }
-                      },
-                      x: {
-                        grid: {
-                          color: 'rgba(75, 85, 99, 0.15)',
-                          display: true
-                        },
-                        border: {
-                          display: false
-                        },
-                        ticks: {
-                          color: '#9CA3AF'
-                        }
-                      }
-                    }
-                  }}
-                />
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 mb-4">
+        {stats.map((stat) => (
+          <Link
+            key={stat.platform}
+            href={stat.href}
+            className="block transition-transform hover:scale-105"
+          >
+            <div className="p-6 rounded-lg bg-card border border-border hover:bg-accent/10 transition-colors flex flex-col items-center space-y-2">
+              <stat.icon
+                className="h-8 w-8 mb-2"
+                style={{ color: stat.color }}
+              />
+              <dt className="text-sm font-medium text-muted-foreground truncate mb-1">
+                {stat.platform}
+              </dt>
+              <dd className="text-xl font-semibold text-foreground">
+                {stat.followers.toLocaleString()}
+              </dd>
+              <div className="text-sm font-semibold text-green-400">
+                +{stat.growth}%
               </div>
             </div>
+          </Link>
+        ))}
+      </div>
 
-            <div className="bg-[#1a1d27] shadow rounded-lg p-4 border border-gray-800/50">
-              <h2 className="text-lg font-medium text-white mb-4">Engagement Overview</h2>
-              <div className="h-[350px] w-full">
-                <Line
-                  height="100%"
-                  data={{
-                    labels: months,
-                    datasets: stats.map((stat) => ({
-                      label: stat.platform,
-                      data: generateEngagementData(stat.engagement),
-                      borderColor: stat.color,
-                      backgroundColor: stat.color,
-                      tension: 0.4,
-                      pointRadius: 4,
-                      pointHoverRadius: 6
-                    }))
-                  }}
-                  options={{
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                      legend: {
-                        position: 'top' as const,
-                        align: 'start' as const,
-                        labels: {
-                          color: '#9CA3AF',
-                          padding: 20,
-                          font: { size: 12 },
-                          boxWidth: 15,
-                          usePointStyle: true
-                        }
-                      }
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div className="bg-card shadow rounded-lg p-4 border border-border">
+          <h2 className="text-lg font-medium text-foreground mb-4">Follower Growth</h2>
+          <div className="h-[350px] w-full">
+            <Line
+              height="100%"
+              data={{
+                labels: months,
+                datasets: stats.map((stat) => ({
+                  label: stat.platform,
+                  data: generateGrowthData(stat.followers, stat.growth),
+                  borderColor: stat.color,
+                  backgroundColor: stat.color,
+                  tension: 0.4,
+                  pointRadius: 4,
+                  pointHoverRadius: 6
+                }))
+              }}
+              options={{
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                  legend: {
+                    position: 'top' as const,
+                    align: 'start' as const,
+                    labels: {
+                      color: 'hsl(var(--muted-foreground))',
+                      padding: 20,
+                      font: { size: 12 },
+                      boxWidth: 15,
+                      usePointStyle: true
+                    }
+                  }
+                },
+                scales: {
+                  y: {
+                    beginAtZero: true,
+                    grid: {
+                      color: 'hsl(var(--border))',
+                      display: true
                     },
-                    scales: {
-                      y: {
-                        beginAtZero: true,
-                        grid: {
-                          color: 'rgba(75, 85, 99, 0.15)',
-                          display: true
-                        },
-                        border: {
-                          display: false
-                        },
-                        ticks: {
-                          color: '#9CA3AF',
-                          callback: (value: string | number) => typeof value === 'number' ? `${value}%` : value,
-                          stepSize: 2
-                        },
-                        suggestedMax: 10
-                      },
-                      x: {
-                        grid: {
-                          color: 'rgba(75, 85, 99, 0.15)',
-                          display: true
-                        },
-                        border: {
-                          display: false
-                        },
-                        ticks: {
-                          color: '#9CA3AF'
+                    border: {
+                      display: false
+                    },
+                    ticks: {
+                      color: 'hsl(var(--muted-foreground))',
+                      callback: function(value: string | number) {
+                        if (typeof value === 'number') {
+                          return Intl.NumberFormat('en-US', {
+                            notation: 'compact',
+                            maximumFractionDigits: 1
+                          }).format(value);
                         }
+                        return value;
                       }
                     }
-                  }}
-                />
-              </div>
-            </div>
+                  },
+                  x: {
+                    grid: {
+                      color: 'hsl(var(--border))',
+                      display: true
+                    },
+                    border: {
+                      display: false
+                    },
+                    ticks: {
+                      color: 'hsl(var(--muted-foreground))'
+                    }
+                  }
+                }
+              }}
+            />
+          </div>
+        </div>
+
+        <div className="bg-card shadow rounded-lg p-4 border border-border">
+          <h2 className="text-lg font-medium text-foreground mb-4">Engagement Overview</h2>
+          <div className="h-[350px] w-full">
+            <Line
+              height="100%"
+              data={{
+                labels: months,
+                datasets: stats.map((stat) => ({
+                  label: stat.platform,
+                  data: generateEngagementData(stat.engagement),
+                  borderColor: stat.color,
+                  backgroundColor: stat.color,
+                  tension: 0.4,
+                  pointRadius: 4,
+                  pointHoverRadius: 6
+                }))
+              }}
+              options={{
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                  legend: {
+                    position: 'top' as const,
+                    align: 'start' as const,
+                    labels: {
+                      color: 'hsl(var(--muted-foreground))',
+                      padding: 20,
+                      font: { size: 12 },
+                      boxWidth: 15,
+                      usePointStyle: true
+                    }
+                  }
+                },
+                scales: {
+                  y: {
+                    beginAtZero: true,
+                    grid: {
+                      color: 'hsl(var(--border))',
+                      display: true
+                    },
+                    border: {
+                      display: false
+                    },
+                    ticks: {
+                      color: 'hsl(var(--muted-foreground))',
+                      callback: function(value: string | number) {
+                        if (typeof value === 'number') {
+                          return `${value}%`;
+                        }
+                        return value;
+                      }
+                    }
+                  },
+                  x: {
+                    grid: {
+                      color: 'hsl(var(--border))',
+                      display: true
+                    },
+                    border: {
+                      display: false
+                    },
+                    ticks: {
+                      color: 'hsl(var(--muted-foreground))'
+                    }
+                  }
+                }
+              }}
+            />
           </div>
         </div>
       </div>
-    </DashboardLayout>
+    </div>
   );
 }

@@ -1,0 +1,89 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  username      String    @unique
+  email         String    @unique
+  passwordHash  String
+  createdAt     DateTime  @default(now())
+  lastActive    DateTime?
+  followers     PlatformFollowers[]
+  posts         Post[]
+  engagements   EngagementMetric[]
+}
+
+model PlatformFollowers {
+  id             String   @id @default(cuid())
+  userId         String
+  platform       Platform
+  followersCount Int
+  user           User     @relation(fields: [userId], references: [id])
+
+  @@unique([userId, platform])
+}
+
+model Post {
+  id        String   @id @default(cuid())
+  userId    String
+  platform  Platform
+  content   String
+  createdAt DateTime @default(now())
+  isActive  Boolean  @default(true)
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model EngagementMetric {
+  id             String   @id @default(cuid())
+  userId         String
+  platform       Platform
+  engagementCount Int
+  followerGrowth Int
+  timestamp      DateTime @default(now())
+  user           User     @relation(fields: [userId], references: [id])
+}
+
+model DashboardKPI {
+  id           String   @id @default(cuid())
+  totalUsers   Int
+  activeUsers  Int
+  activePosts  Int
+  newPosts     Int
+  snapshotTime DateTime @default(now())
+}
+
+model AudienceReach {
+  id           String   @id @default(cuid())
+  platform     Platform
+  percentage   Decimal  @db.Decimal(5, 2)
+  snapshotTime DateTime @default(now())
+}
+
+model PlatformPerformance {
+  id          String      @id @default(cuid())
+  platform    Platform
+  metricType  MetricType
+  value       Int
+  timestamp   DateTime    @default(now())
+}
+
+enum Platform {
+  Twitter
+  Instagram
+  LinkedIn
+  TikTok
+  YouTube
+  Pinterest
+}
+
+enum MetricType {
+  Engagement
+  Reach
+  Growth
+}
